@@ -1,5 +1,11 @@
 This project contains a simple ruby benchmark script to compare performance of `as_json_representation` gem with other serialization gems.
 
+#### Install && Run
+
+`bundle install`
+
+`ruby benchmarks.rb`
+
 #### Output
 
 ```

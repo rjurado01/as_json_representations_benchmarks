@@ -2,6 +2,7 @@ require 'fast_jsonapi'
 require 'blueprinter'
 require 'as_json_representations'
 require 'benchmark'
+require 'pp'
 
 class MovieSerializer
   include FastJsonapi::ObjectSerializer
@@ -50,18 +51,28 @@ movie.movie_type_id = 1
 movie.year = 1990
 movie
 
-puts MovieSerializer.new(movie).serializable_hash
-puts MovieBlueprint.render_as_hash(movie)
-puts movie.as_json(representation: :public)
+puts "---- fast_jsonapi ----\n\n"
+pp MovieSerializer.new(movie).serializable_hash
 
-puts (Benchmark.measure do
-  10000.times { MovieSerializer.new(movie).serializable_hash }
-end)
+puts "\n---- blueprinter ----\n\n"
+pp MovieBlueprint.render_as_hash(movie)
 
-puts (Benchmark.measure do
-  10000.times { MovieBlueprint.render_as_hash(movie) }
-end)
+puts "\n---- as_json_representations ----\n\n"
+pp movie.as_json(representation: :public)
 
-puts (Benchmark.measure do
-  10000.times { movie.as_json(representation: :public) }
-end)
+
+puts "\n---- 10000 iterations times ----\n\n"
+
+Benchmark.bm(25) do |x|
+  x.report("fast_jsonapi") do
+    10000.times { MovieSerializer.new(movie).serializable_hash }
+  end
+
+  x.report("blueprinter") do
+    10000.times { MovieBlueprint.render_as_hash(movie) }
+  end
+
+  x.report("as_json_representations") do
+    10000.times { movie.as_json(representation: :public) }
+  end
+end
