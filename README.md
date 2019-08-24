@@ -1,4 +1,4 @@
-This project contains a simple ruby benchmark script to campare performance of `as_json_representation` gem with other serialization gems.
+This project contains a simple ruby benchmark script to compare performance of `as_json_representation` gem with other serialization gems.
 
 #### Output
 
